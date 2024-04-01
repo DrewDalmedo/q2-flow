@@ -24,3 +24,16 @@ The official releases (including Windows binaries) can be found at our
 homepage: https://www.yamagi.org/quake2  
 **Unsupported** preview builds for Windows can be found at
 https://deponie.yamagi.org/quake2/misc/
+
+## Building
+On Linux, build dependencies vary from distro to distro.
+
+Ubuntu 22.04 dependencies:
+- build-essential
+- libcurl4-gnutls-dev
+- libsdl2-dev
+- libopenal-dev
+
+```bash
+sudo apt install -y build-essential libcurl4-gnutls-dev libsdl2-dev libopenal-dev 
+```
