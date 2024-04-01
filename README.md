@@ -25,8 +25,8 @@ homepage: https://www.yamagi.org/quake2
 **Unsupported** preview builds for Windows can be found at
 https://deponie.yamagi.org/quake2/misc/
 
-## Building
-On Linux, build dependencies vary from distro to distro.
+## Build Instructions
+On Linux, build dependencies will vary from distro to distro.
 
 Ubuntu 22.04 dependencies:
 - build-essential
@@ -34,6 +34,10 @@ Ubuntu 22.04 dependencies:
 - libsdl2-dev
 - libopenal-dev
 
-```bash
+To install these dependencies on Ubuntu 22.04, run the following command:
+
+```sh
 sudo apt install -y build-essential libcurl4-gnutls-dev libsdl2-dev libopenal-dev 
 ```
+
+Then, at the root of the project folder, run `make`.
