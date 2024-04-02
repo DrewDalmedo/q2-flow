@@ -1211,4 +1211,9 @@ release/baseq2/game.so : $(GAME_OBJS)
 	${Q}$(CC) $(LDFLAGS) $(GAME_OBJS) $(LDLIBS) -o $@
 endif
 
+run: all
+	# assumes all game files are placed in the ./gamefiles directory
+	cp ./gamefiles/* ./release/baseq2
+	./release/quake2
+
 # ----------
