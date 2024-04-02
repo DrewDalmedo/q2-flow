@@ -1099,7 +1099,7 @@ void
 Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 		qboolean hyper, int effect)
 {
-	vec3_t forward, right;
+	vec3_t forward, right, up;
 	vec3_t start;
 	vec3_t offset;
 
@@ -1113,7 +1113,7 @@ Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 		damage *= 4;
 	}
 
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	AngleVectors(ent->client->v_angle, forward, right, up);
 	VectorSet(offset, 24, 8, ent->viewheight - 8);
 	VectorAdd(offset, g_offset, offset);
 	P_ProjectSource(ent, offset, forward, right, start);
@@ -1121,6 +1121,16 @@ Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 	VectorScale(forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
+	fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
+
+  start[0] += up[0] * 10;
+  start[1] += up[1] * 10;
+  start[2] += up[2] * 10;
+	fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
+
+  start[0] -= up[0] * 20;
+  start[1] -= up[1] * 20;
+  start[2] -= up[2] * 20;
 	fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
 
 	/* send muzzle flash */
