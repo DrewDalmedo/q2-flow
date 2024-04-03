@@ -459,6 +459,8 @@ fire_blaster(edict_t *self, vec3_t start, vec3_t dir, int damage,
 	VectorNormalize(dir);
 
 	bolt = G_Spawn();
+  if (!bolt) return;
+
 	bolt->svflags = SVF_DEADMONSTER;
 
 	/* yes, I know it looks weird that projectiles are deadmonsters
