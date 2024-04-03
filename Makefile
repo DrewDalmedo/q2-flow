@@ -1212,8 +1212,8 @@ release/baseq2/game.so : $(GAME_OBJS)
 endif
 
 run: all
-	# assumes all game files are placed in the ./gamefiles directory
-	cp ./gamefiles/* ./release/baseq2
+	# assumes all game files are placed in the ./modfiles directory
+	cp ./modfiles/* ./release/baseq2
 	./release/quake2
 
 # ----------

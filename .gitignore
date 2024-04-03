@@ -1,6 +1,6 @@
 /build/
 /release/
-/gamefiles/
+/modfiles/
 *.mk
 *.user
 *.d
