@@ -1,0 +1,28 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-O2",
+      "-Wall",
+      "-pipe",
+      "-fomit-frame-pointer",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-fvisibility=hidden",
+      "-DYQ2OSTYPE=\"Linux\"",
+      "-DYQ2ARCH=\"x86_64\"",
+      "-mfpmath=sse",
+      "-ffp-contract=off",
+      "-fPIC",
+      "-Wno-unused-result",
+      "-I/usr/include",
+      "-o",
+      "build/baseq2/src/game/g_combat.o",
+      "src/game/g_combat.c"
+    ],
+    "directory": "/home/drew/Documents/yquake2-gamemod",
+    "file": "/home/drew/Documents/yquake2-gamemod/src/game/g_combat.c",
+    "output": "/home/drew/Documents/yquake2-gamemod/build/baseq2/src/game/g_combat.o"
+  }
+]
