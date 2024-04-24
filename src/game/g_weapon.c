@@ -147,6 +147,7 @@ fire_hit(edict_t *self, vec3_t aim, int damage, int kick)
 	T_Damage(tr.ent, self, self, dir, point, vec3_origin, damage,
 			kick / 2, DAMAGE_NO_KNOCKBACK, MOD_HIT);
 
+
 	if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
 	{
 		return false;
@@ -379,7 +380,9 @@ blaster_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	int mod;
 
-	if (!self || !other) /* plane and surf can be NULL */
+  /* plane and surf can be NULL */
+  if (!self) return;
+  else if (!other) 
 	{
 		G_FreeEdict(self);
 		return;
