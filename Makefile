@@ -1214,6 +1214,6 @@ endif
 run: all
 	# assumes all game files are placed in the ./modfiles directory
 	cp ./modfiles/* ./release/baseq2
-	./release/quake2
+	./release/quake2 +set deathmatch 1 +map base1
 
 # ----------
