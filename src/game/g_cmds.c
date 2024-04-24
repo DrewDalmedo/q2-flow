@@ -1822,6 +1822,24 @@ Cmd_PrefWeap_f(edict_t *ent)
 	}
 }
 
+/* flow mod command functions */
+void
+Cmd_Dash_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  if (!(cl->ps.pmove.pm_advanced_movement & PMF_DASH)) {
+    cl->ps.pmove.pm_advanced_movement |= PMF_DASH;
+    gi.centerprintf(ent, "Dash used!\nValue of dash flag is: %d", ent->client->ps.pmove.pm_advanced_movement & PMF_DASH);
+  }
+
+  return;
+}
+
 void
 ClientCommand(edict_t *ent)
 {
@@ -1838,6 +1856,15 @@ ClientCommand(edict_t *ent)
 	}
 
 	cmd = gi.argv(0);
+
+  /* flow mod commands */
+  if (Q_stricmp(cmd, "dash") == 0)
+	{
+		Cmd_Dash_f(ent);
+		return;
+	}
+
+  /* end flow */
 
 	if (Q_stricmp(cmd, "players") == 0)
 	{
