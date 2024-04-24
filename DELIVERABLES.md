@@ -1,15 +1,42 @@
 # Deliverables
 
+## BUGS
+    - Double jump only works once per server instance 
+
 ## Common Deliverables:
-- Shortcut that Auto-Launches your Mod
-- Mod in a Separate Folder
-- README file in GIT that explains HOWTO install and play / test your mod
-- UI updates reflecting your Personal Deliverables
-- Help Screen to detail how to play your mod in game
+[ ] Shortcut that Auto-Launches your Mod
+    [ ] Bash script
+[ ] Mod in a Separate Folder
+[ ] README file in GIT that explains HOWTO install and play / test your mod
+    [x] Dependencies
+    [ ] Explanation on using `make run`
+    [ ] Explanation on making mod folder
+[ ] UI updates reflecting your Personal Deliverables
+[ ] Help Screen to detail how to play your mod in game
 
 ## Personal Deliverables
-- Add in 5 additional movement abilities
-- Rework the weapons to be non-lethal / affect player movement
-- Add in 5 power ups
-- Add in a timer and keep track of player history (file ops)
-- Add in checkpoints
+[ ] Add in 5 additional movement abilities
+    [x] Double jump
+    [ ] Dash
+    [ ] Superjump
+    [ ] Slide
+    [ ] Stomp
+[ ] Rework the weapons to be non-lethal / affect player movement
+    [x] All weapons do no damage
+    [ ] All weapons slow down the player on impact
+[ ] Add in 5 power ups
+    [ ] Modify weapon to disable double jump
+    [ ] Modify weapon to disable dashing
+    [ ] Modify weapon to disable superjump
+    [ ] Modify weapon to disable slide
+    [ ] Modify weapon to disable stomp
+[ ] Add in a timer and keep track of player history (file ops)
+    [ ] Start a timer on match join
+    [ ] **Maybe** keep track of when checkpoints are hit
+    [ ] Stop timer when race is finished 
+    [ ] Open file to write times to
+    [ ] Write final time, with checkpoint times underneath
+    [ ] Properly close file
+[ ] Add in checkpoints
+    ???
+
