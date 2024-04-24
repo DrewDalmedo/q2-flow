@@ -69,6 +69,8 @@ float pm_wateraccelerate = 10;
 float pm_friction = 6;
 float pm_waterfriction = 1;
 float pm_waterspeed = 400;
+/* flow movement parameters */
+float pm_dashspeed = 400;
 
 #define STOP_EPSILON 0.1 /* Slide off of the impacting object returns the blocked flags (1 = floor, 2 = step / wall) */
 #define MIN_STEP_NORMAL 0.7 /* can't step up onto very steep slopes */
@@ -730,7 +732,8 @@ PM_CatagorizePosition(void)
 			if (!(pm->s.pm_flags & PMF_ON_GROUND))
 			{
 				/* just hit the ground */
-				pm->s.pm_flags |= PMF_ON_GROUND;
+				pm->s.pm_flags                |= PMF_ON_GROUND;
+        pm->s.pm_advanced_movement    &= ~PMF_DOUBLEJUMP; /* enable another double jump */
 
 				/* don't do landing time if we were just going down a slope */
 				if (pml.velocity[2] < -200)
@@ -805,10 +808,16 @@ PM_CheckJump(void)
 	}
 
 	/* must wait for jump to be released */
-	if (pm->s.pm_flags & PMF_JUMP_HELD)
+	if (pm->s.pm_flags & PMF_JUMP_HELD) 
 	{
 		return;
 	}
+
+  /* if double jumped, cannot jump again */
+  if (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)
+  {
+    return;
+  }
 
 	if (pm->s.pm_type == PM_DEAD)
 	{
@@ -843,7 +852,11 @@ PM_CheckJump(void)
 
 	if (pm->groundentity == NULL)
 	{
-		return; /* in air, so no effect */
+    if (!(pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) { /* if we haven't double jumped, jump again */
+      pm->s.pm_advanced_movement |= PMF_DOUBLEJUMP;
+      pml.velocity[2] = 300;
+    }
+    return;
 	}
 
 	pm->s.pm_flags |= PMF_JUMP_HELD;
