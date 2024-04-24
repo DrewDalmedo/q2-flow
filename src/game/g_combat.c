@@ -655,7 +655,10 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 			SpawnDamage(te_sparks, point, normal);
 		}
 
-		targ->health = targ->health - take;
+		/* disable taking damage */
+		//targ->health = targ->health - take;
+
+		/* TODO: modify speed of entity */
 
 		if (targ->health <= 0)
 		{
