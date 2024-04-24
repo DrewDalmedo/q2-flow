@@ -595,6 +595,13 @@ typedef enum
 #define PMF_TIME_TELEPORT 32    /* pm_time is non-moving time */
 #define PMF_NO_PREDICTION 64    /* temporarily disables prediction (used for grappling hook) */
 
+/* pmove->pm_advanced_movement */
+#define PMF_DOUBLEJUMP 1
+#define PMF_DASH 2
+#define PMF_SUPERJUMP 4
+#define PMF_SLIDE 8
+#define PMF_STOMP 16
+
 /* this structure needs to be communicated bit-accurate/
  * from the server to the client to guarantee that
  * prediction stays in sync, so no floats are used.
@@ -609,8 +616,12 @@ typedef struct
 	byte pm_flags;              /* ducked, jump_held, etc */
 	byte pm_time;               /* each unit = 8 ms */
 	short gravity;
-	short delta_angles[3];      /* add to command angles to get view direction
-								 * changed by spawns, rotating objects, and teleporters */
+	short delta_angles[3];      /* add to command angles to get view direction */
+								 /* changed by spawns, rotating objects, and teleporters */
+
+  /* flow mod flags*/
+  byte pm_advanced_movement;  /* double jump, dash, superjump, slide, stomp */
+
 } pmove_state_t;
 
 /* button bits */
