@@ -36,6 +36,11 @@ void AL_Overwater();
 
 #define STEPSIZE 18
 
+// dash duration 
+#define DASH_DURATION 0.6 
+// how fast the dash is
+#define DASH_MULTIPLIER 2.25
+
 /* all of the locals will be zeroed before each
  * pmove, just to make damn sure we don't have
  * any differences when running on client or server */
@@ -61,7 +66,7 @@ pml_t pml;
 
 /* movement parameters */
 float pm_stopspeed = 100;
-float pm_maxspeed = 300;
+float pm_maxspeed = 800;
 float pm_duckspeed = 100;
 float pm_accelerate = 10;
 float pm_airaccelerate = 0;
@@ -71,6 +76,9 @@ float pm_waterfriction = 1;
 float pm_waterspeed = 400;
 /* flow movement parameters */
 float pm_dashspeed = 400;
+
+/* initialize at -1 to signal not in use */
+float dashtimer = -1.0f;
 
 #define STOP_EPSILON 0.1 /* Slide off of the impacting object returns the blocked flags (1 = floor, 2 = step / wall) */
 #define MIN_STEP_NORMAL 0.7 /* can't step up onto very steep slopes */
@@ -596,7 +604,24 @@ PM_AirMove(void)
 
 	for (i = 0; i < 2; i++)
 	{
-		wishvel[i] = pml.forward[i] * fmove + pml.right[i] * smove;
+    // dash
+    if (pm->s.pm_advanced_movement & PMF_DASH) {
+      if (dashtimer == -1.0f) {
+        dashtimer = pml.frametime;
+      }
+      else if (dashtimer >= DASH_DURATION) {
+        pm->s.pm_advanced_movement &= ~PMF_DASH;
+        dashtimer = -1.0f;
+      }
+      else {
+        dashtimer += pml.frametime;
+      }
+      
+      wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER;
+    }
+    else {
+      wishvel[i] = pml.forward[i] * fmove + pml.right[i] * smove;
+    }
 	}
 
 	wishvel[2] = 0;
