@@ -21,9 +21,9 @@
     [ ] Superjump
     [ ] Slide
     [ ] Stomp
-[ ] Rework the weapons to be non-lethal / affect player movement
+[x] Rework the weapons to be non-lethal / affect player movement
     [x] All weapons do no damage
-    [ ] All weapons slow down the player on impact
+    [x] All weapons slow down the player on impact
 [ ] Add in 5 power ups
     [ ] Modify weapon to disable double jump
     [ ] Modify weapon to disable dashing
