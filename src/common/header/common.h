@@ -232,7 +232,7 @@ enum clc_ops_e
 
 /* ============================================== */
 
-/* plyer_state_t communication */
+/* player_state_t communication */
 #define PS_M_TYPE (1 << 0)
 #define PS_M_ORIGIN (1 << 1)
 #define PS_M_VELOCITY (1 << 2)
@@ -240,6 +240,7 @@ enum clc_ops_e
 #define PS_M_FLAGS (1 << 4)
 #define PS_M_GRAVITY (1 << 5)
 #define PS_M_DELTA_ANGLES (1 << 6)
+#define PS_M_ADVANCED_MOVEMENT (1 << 15)
 
 #define PS_VIEWOFFSET (1 << 7)
 #define PS_VIEWANGLES (1 << 8)

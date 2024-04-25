@@ -570,6 +570,10 @@ CL_ParsePlayerstate(frame_t *oldframe, frame_t *newframe)
 		state->pmove.pm_flags = MSG_ReadByte(&net_message);
 	}
 
+	if (flags & PS_M_ADVANCED_MOVEMENT) {
+		state->pmove.pm_advanced_movement = MSG_ReadByte(&net_message);
+	}
+
 	if (flags & PS_M_GRAVITY)
 	{
 		state->pmove.gravity = MSG_ReadShort(&net_message);

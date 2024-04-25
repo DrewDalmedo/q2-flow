@@ -200,6 +200,10 @@ SV_WritePlayerstateToClient(client_frame_t *from, client_frame_t *to,
 		pflags |= PS_M_FLAGS;
 	}
 
+	if (ps->pmove.pm_advanced_movement != ops->pmove.pm_advanced_movement) {
+		pflags |= PS_M_ADVANCED_MOVEMENT;
+	}
+
 	if (ps->pmove.gravity != ops->pmove.gravity)
 	{
 		pflags |= PS_M_GRAVITY;
@@ -298,6 +302,10 @@ SV_WritePlayerstateToClient(client_frame_t *from, client_frame_t *to,
 	if (pflags & PS_M_FLAGS)
 	{
 		MSG_WriteByte(msg, ps->pmove.pm_flags);
+	}
+
+	if (pflags & PS_M_ADVANCED_MOVEMENT) {
+		MSG_WriteByte(msg, ps->pmove.pm_advanced_movement);
 	}
 
 	if (pflags & PS_M_GRAVITY)

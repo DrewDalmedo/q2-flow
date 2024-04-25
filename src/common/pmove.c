@@ -28,6 +28,7 @@
 #include "header/common.h"
 #include "../client/sound/header/local.h"
 #include "../client/header/client.h"
+#include "header/shared.h"
 
 #if !defined(DEDICATED_ONLY) && defined(USE_OPENAL)
 void AL_Underwater();
@@ -381,9 +382,13 @@ PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
 		accelspeed = addspeed;
 	}
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 2; i++)
 	{
 		pml.velocity[i] += accelspeed * wishdir[i];
+	}
+
+	if (pm->groundentity || !(pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) {
+		pml.velocity[2] += accelspeed * wishdir[2];
 	}
 }
 
@@ -413,9 +418,13 @@ PM_AirAccelerate(vec3_t wishdir, float wishspeed, float accel)
 		accelspeed = addspeed;
 	}
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 2; i++)
 	{
 		pml.velocity[i] += accelspeed * wishdir[i];
+	}
+
+	if (pm->groundentity || !(pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) {
+		pml.velocity[2] += accelspeed * wishdir[2];
 	}
 }
 
@@ -612,6 +621,11 @@ PM_AirMove(void)
 	{
     // slowed on taking damage
     if (pm->s.pm_advanced_movement & PMF_SLOWED) { 
+      // if we're attempting to dash disable the flag (cannot dash while slowed)
+      if (pm->s.pm_advanced_movement & PMF_DASH) {
+        pm->s.pm_advanced_movement &= ~PMF_DASH;
+      }
+
       if (slowedtimer == -1.0f) {
         slowedtimer = pml.frametime;
       }
@@ -780,7 +794,7 @@ PM_CatagorizePosition(void)
 			{
 				/* just hit the ground */
 				pm->s.pm_flags                |= PMF_ON_GROUND;
-        pm->s.pm_advanced_movement    &= ~PMF_DOUBLEJUMP; /* enable another double jump */
+				pm->s.pm_advanced_movement    &= ~PMF_DOUBLEJUMP; /* enable another double jump */
 
 				/* don't do landing time if we were just going down a slope */
 				if (pml.velocity[2] < -200)
@@ -841,16 +855,22 @@ PM_CatagorizePosition(void)
 void
 PM_CheckJump(void)
 {
+	float newYVel = 270;
+
 	if (pm->s.pm_flags & PMF_TIME_LAND)
 	{
 		/* hasn't been long enough since landing to jump again */
 		return;
 	}
 
-	if (pm->cmd.upmove < 10)
+	if ((pm->cmd.upmove < 10) && (pm->cmd.upmove >= 0))
 	{
 		/* not holding jump */
 		pm->s.pm_flags &= ~PMF_JUMP_HELD;
+		return;
+	}
+	else if (pm->cmd.upmove < 0 && pm->groundentity == NULL) {
+		pml.velocity[2] = -500;
 		return;
 	}
 
@@ -860,11 +880,11 @@ PM_CheckJump(void)
 		return;
 	}
 
-  /* if double jumped, cannot jump again */
-  if (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)
-  {
-    return;
-  }
+	/* if double jumped, cannot jump again */
+	if (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)
+	{
+		return;
+	}
 
 	if (pm->s.pm_type == PM_DEAD)
 	{
@@ -897,19 +917,20 @@ PM_CheckJump(void)
 		return;
 	}
 
-	if (pm->groundentity == NULL)
+	if (pm->groundentity == NULL && (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) {
+		return;
+	}
+  else if (pm->groundentity == NULL)
 	{
-    if (!(pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) { /* if we haven't double jumped, jump again */
-      pm->s.pm_advanced_movement |= PMF_DOUBLEJUMP;
-      pml.velocity[2] = 300;
-    }
-    return;
+		pm->s.pm_advanced_movement |= PMF_DOUBLEJUMP;
+		newYVel = 300;
 	}
 
 	pm->s.pm_flags |= PMF_JUMP_HELD;
 
 	pm->groundentity = NULL;
-	pml.velocity[2] += 270;
+
+	pml.velocity[2] = newYVel;
 
 	if (pml.velocity[2] < 270)
 	{
@@ -1089,6 +1110,7 @@ void
 PM_CheckDuck(void)
 {
 	trace_t trace;
+
 
 	pm->mins[0] = -16;
 	pm->mins[1] = -16;
