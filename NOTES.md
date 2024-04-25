@@ -28,3 +28,5 @@ These are the collection of notes I've gathered while trying to mod Quake 2.
 - Type of edict_s
     - edict_s defined in game.h
 
+## Checkpoints
+- `src/game/g_trigger.c`
