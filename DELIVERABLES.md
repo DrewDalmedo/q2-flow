@@ -1,7 +1,7 @@
 # Deliverables
 
 ## BUGS
-    - Double jump only works once per server instance 
+    - Double jump is buggy and occasionally doesn't work (player snaps back to ground, prediction error?)
 
 ## Common Deliverables:
 [ ] Shortcut that Auto-Launches your Mod
@@ -17,7 +17,7 @@
 ## Personal Deliverables
 [ ] Add in 5 additional movement abilities
     [x] Double jump
-    [ ] Dash
+    [x] Dash
     [ ] Superjump
     [ ] Slide
     [ ] Stomp
