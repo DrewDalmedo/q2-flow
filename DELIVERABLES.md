@@ -1,7 +1,8 @@
 # Deliverables
 
 ## BUGS
-    - Double jump is buggy and occasionally doesn't work (player snaps back to ground, prediction error?)
+    - Crouching is buggy (has a slight delay)
+    - Dash length is inconsistent
 
 ## Common Deliverables:
 [ ] Shortcut that Auto-Launches your Mod
@@ -20,7 +21,7 @@
     [x] Dash
     [ ] Superjump
     [ ] Slide
-    [ ] Stomp
+    [x] Stomp
 [x] Rework the weapons to be non-lethal / affect player movement
     [x] All weapons do no damage
     [x] All weapons slow down the player on impact
