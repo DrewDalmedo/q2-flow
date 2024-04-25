@@ -1834,7 +1834,7 @@ Cmd_Dash_f(edict_t *ent)
 
   if (!(cl->ps.pmove.pm_advanced_movement & PMF_DASH)) {
     cl->ps.pmove.pm_advanced_movement |= PMF_DASH;
-    gi.centerprintf(ent, "Dash used!\nValue of dash flag is: %d", ent->client->ps.pmove.pm_advanced_movement & PMF_DASH);
+    gi.centerprintf(ent, "Dash used!", ent->client->ps.pmove.pm_advanced_movement & PMF_DASH);
   }
 
   return;
