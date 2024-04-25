@@ -658,6 +658,9 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 		/* disable taking damage */
 		//targ->health = targ->health - take;
 
+    if (client) {
+      client->ps.pmove.pm_advanced_movement |= PMF_SLOWED;
+    }
 		/* TODO: modify speed of entity */
 
 		if (targ->health <= 0)

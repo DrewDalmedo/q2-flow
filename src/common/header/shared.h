@@ -601,6 +601,7 @@ typedef enum
 #define PMF_SUPERJUMP 4
 #define PMF_SLIDE 8
 #define PMF_STOMP 16
+#define PMF_SLOWED 32
 
 /* this structure needs to be communicated bit-accurate/
  * from the server to the client to guarantee that
