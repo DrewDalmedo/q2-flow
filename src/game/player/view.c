@@ -740,8 +740,11 @@ P_FallingDamage(edict_t *ent)
 
 		if (!deathmatch->value || !((int)dmflags->value & DF_NO_FALLING))
 		{
-			T_Damage(ent, world, world, dir, ent->s.origin,
+      /* FLOW: Disable all fall damage but keep visual effects */
+
+			/*T_Damage(ent, world, world, dir, ent->s.origin,
 					vec3_origin, damage, 0, 0, MOD_FALLING);
+      */
 		}
 	}
 	else
