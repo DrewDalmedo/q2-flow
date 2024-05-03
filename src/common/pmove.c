@@ -670,8 +670,6 @@ PM_AirMove(void)
         continue;
       }
       else {
-        if (pm->s.pm_advanced_movement & PMF_DISABLEOTHERS) {
-        }
         dashtimer = -999999;
       }
     }
@@ -906,7 +904,7 @@ PM_CheckJump(void)
     }
     else {
       superJumpTimer = -999999;
-      if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS))
+      if (pm->s.pm_advanced_movement & PMF_SUPERJUMP)
         pm->s.pm_advanced_movement &= ~PMF_SUPERJUMP;
     }
   }
@@ -1204,7 +1202,7 @@ PM_CheckDuck(void)
 		pm->s.pm_flags |= PMF_DUCKED;
   
     // slide
-    if (!(pm->s.pm_advanced_movement & PMF_SLIDE) && !(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS)) {
+    if (!(pm->s.pm_advanced_movement & PMF_SLIDE)){ 
       pm->s.pm_advanced_movement |= PMF_SLIDE;
     }
     VectorCopy(pml.velocity, pml.slidingDirection);
@@ -1242,7 +1240,7 @@ PM_CheckDuck(void)
 		pm->maxs[2] = 32;
 		pm->viewheight = 22;
 
-    if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS && pm->s.pm_advanced_movement & PMF_SLIDE))
+    if (pm->s.pm_advanced_movement & PMF_SLIDE)
       pm->s.pm_advanced_movement &= ~PMF_SLIDE;
 	}
 }
