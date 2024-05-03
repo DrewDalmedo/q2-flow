@@ -1832,12 +1832,111 @@ Cmd_Dash_f(edict_t *ent)
 
   cl = ent->client;
 
-  if (!(cl->ps.pmove.pm_advanced_movement & PMF_DASH)) {
+  if (!(cl->ps.pmove.pm_disabled_movement & PMF_DASH)) {
     cl->ps.pmove.pm_advanced_movement |= PMF_DASH;
-    gi.centerprintf(ent, "Dash used!");
+    //gi.centerprintf(ent, "Dash used!");
   }
 
   return;
+}
+
+void
+Cmd_DisableDash_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement |= PMF_DASH;
+}
+
+void
+Cmd_DisableSlide_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement |= PMF_SLIDE;
+}
+
+void 
+Cmd_DisableSuperJump_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement |= PMF_SUPERJUMP;
+}
+
+void
+Cmd_DisableStomp_f(edict_t *ent)
+{
+  gclient_t *cl;
+  
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement |= PMF_STOMP;
+}
+
+void
+Cmd_DisableDoubleJump_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement |= PMF_DOUBLEJUMP;
+}
+
+void 
+Cmd_DisableAllMovement_f(edict_t *ent)
+{
+  Cmd_DisableDash_f(ent);
+  Cmd_DisableSlide_f(ent);
+  Cmd_DisableSuperJump_f(ent);
+  Cmd_DisableStomp_f(ent);
+  Cmd_DisableDoubleJump_f(ent);
+}
+
+void
+Cmd_EnableAllMovement_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  cl->ps.pmove.pm_disabled_movement &= ~PMF_DOUBLEJUMP;
+  cl->ps.pmove.pm_disabled_movement &= ~PMF_DASH;
+  cl->ps.pmove.pm_disabled_movement &= ~PMF_SUPERJUMP;
+  cl->ps.pmove.pm_disabled_movement &= ~PMF_SLIDE;
+  cl->ps.pmove.pm_disabled_movement &= ~PMF_STOMP;
+}
+
+void
+Cmd_PrintAdvancedMovementFlags_f(edict_t *ent)
+{
+  gclient_t *cl;
+
+  if (!ent) return;
+
+  cl = ent->client;
+
+  gi.dprintf("%d\n", cl->ps.pmove.pm_advanced_movement);
+  gi.dprintf("%d\n", cl->ps.pmove.pm_disabled_movement);
 }
 
 void
@@ -1858,11 +1957,60 @@ ClientCommand(edict_t *ent)
 	cmd = gi.argv(0);
 
   /* flow mod commands */
+  if (Q_stricmp(cmd, "printamf") == 0)
+  {
+    Cmd_PrintAdvancedMovementFlags_f(ent);
+    return;
+  }
+
   if (Q_stricmp(cmd, "dash") == 0)
 	{
 		Cmd_Dash_f(ent);
 		return;
 	}
+
+  if (Q_stricmp(cmd, "disabledash") == 0)
+  {
+    Cmd_DisableDash_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "disableslide") == 0)
+  {
+    Cmd_DisableSlide_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "disablesuperjump") == 0)
+  {
+    Cmd_DisableSuperJump_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "disablestomp") == 0)
+  {
+    Cmd_DisableStomp_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "disabledoublejump") == 0)
+  {
+    Cmd_DisableDoubleJump_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "disableall") == 0)
+  {
+    Cmd_DisableAllMovement_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "enableall") == 0)
+  {
+    Cmd_EnableAllMovement_f(ent);
+    return;
+  }
+
 
   /* end flow */
 
