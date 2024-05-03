@@ -49,6 +49,8 @@ void AL_Overwater();
 
 #define SLIDE_MULTIPLIER 1.50
 
+#define SUPERJUMP_DURATION 350
+
 /* all of the locals will be zeroed before each
  * pmove, just to make damn sure we don't have
  * any differences when running on client or server */
@@ -90,6 +92,7 @@ float pm_dashspeed = 400;
 /* initialize at -999999 to signal not in use */
 int dashtimer = -999999;
 int slowedtimer = -999999;
+int superJumpTimer = -999999;
 
 #define STOP_EPSILON 0.1 /* Slide off of the impacting object returns the blocked flags (1 = floor, 2 = step / wall) */
 #define MIN_STEP_NORMAL 0.7 /* can't step up onto very steep slopes */
@@ -872,6 +875,19 @@ void
 PM_CheckJump(void)
 {
 	float newYVel = 270;
+  int currentTime = Sys_Milliseconds();
+
+  // superjump
+  if (pm->s.pm_advanced_movement & PMF_SUPERJUMP && currentTime - superJumpTimer < SUPERJUMP_DURATION) {
+    if (pm->cmd.upmove == 200) {
+      pml.velocity[2] = 400;
+    }
+  }
+  else {
+    superJumpTimer = -999999;
+    pm->s.pm_advanced_movement &= ~PMF_SUPERJUMP;
+  }
+
 
 	if (pm->s.pm_flags & PMF_TIME_LAND)
 	{
@@ -936,8 +952,8 @@ PM_CheckJump(void)
 	if (pm->groundentity == NULL && (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) {
 		return;
 	}
-  else if (pm->groundentity == NULL)
-	{
+
+  if (pm->groundentity == NULL) {
 		pm->s.pm_advanced_movement |= PMF_DOUBLEJUMP;
 		newYVel = 300;
 	}
@@ -1178,6 +1194,10 @@ PM_CheckDuck(void)
 	{
 		pm->maxs[2] = 4;
 		pm->viewheight = -2;
+
+    // superjump
+    pm->s.pm_advanced_movement |= PMF_SUPERJUMP;
+    superJumpTimer = Sys_Milliseconds();
 	}
 	else
 	{

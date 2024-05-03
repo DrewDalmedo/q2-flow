@@ -15,10 +15,10 @@
 [ ] Help Screen to detail how to play your mod in game
 
 ## Personal Deliverables
-[ ] Add in 5 additional movement abilities
+[x] Add in 5 additional movement abilities
     [x] Double jump
     [x] Dash
-    [ ] Superjump
+    [x] Superjump
     [x] Slide
     [x] Stomp
 [x] Rework the weapons to be non-lethal / affect player movement
