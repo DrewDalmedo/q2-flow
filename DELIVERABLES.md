@@ -19,7 +19,7 @@
     [x] Double jump
     [x] Dash
     [ ] Superjump
-    [ ] Slide
+    [x] Slide
     [x] Stomp
 [x] Rework the weapons to be non-lethal / affect player movement
     [x] All weapons do no damage

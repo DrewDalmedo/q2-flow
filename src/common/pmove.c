@@ -40,12 +40,14 @@ void AL_Overwater();
 // dash duration (milliseconds)
 #define DASH_DURATION 300
 // how fast the dash is
-#define DASH_MULTIPLIER 3
+#define DASH_MULTIPLIER 2.50
 
 // slowed duration (milliseconds)
 #define SLOW_DURATION 1500
 // how much the player is slowed down
 #define SLOW_MULTIPLIER 0.55
+
+#define SLIDE_MULTIPLIER 1.50
 
 /* all of the locals will be zeroed before each
  * pmove, just to make damn sure we don't have
@@ -58,6 +60,8 @@ typedef struct
 
 	vec3_t forward, right, up;
 	float frametime;
+
+  vec3_t slidingDirection;
 
 	csurface_t *groundsurface;
 	cplane_t groundplane;
@@ -73,7 +77,7 @@ pml_t pml;
 /* movement parameters */
 float pm_stopspeed = 100;
 float pm_maxspeed = 800;
-float pm_duckspeed = 100;
+float pm_duckspeed = 400;
 float pm_accelerate = 10;
 float pm_airaccelerate = 0;
 float pm_wateraccelerate = 10;
@@ -663,6 +667,12 @@ PM_AirMove(void)
       dashtimer = -999999;
     }
 
+    // slide
+    if (pm->s.pm_flags & PMF_DUCKED) {
+      wishvel[i] = (pml.slidingDirection[i] * fmove) * SLIDE_MULTIPLIER;
+      continue;
+    }
+
     wishvel[i] = pml.forward[i] * fmove + pml.right[i] * smove;
 	}
 
@@ -1117,7 +1127,6 @@ PM_CheckDuck(void)
 {
 	trace_t trace;
 
-
 	pm->mins[0] = -16;
 	pm->mins[1] = -16;
 
@@ -1142,6 +1151,12 @@ PM_CheckDuck(void)
 	{
 		/* duck */
 		pm->s.pm_flags |= PMF_DUCKED;
+  
+    // slide
+    if (!(pm->s.pm_advanced_movement & PMF_SLIDE)) {
+      pm->s.pm_advanced_movement |= PMF_SLIDE;
+    }
+    VectorCopy(pml.velocity, pml.slidingDirection);
 	}
 	else
 	{
@@ -1168,6 +1183,8 @@ PM_CheckDuck(void)
 	{
 		pm->maxs[2] = 32;
 		pm->viewheight = 22;
+
+    pm->s.pm_advanced_movement &= ~PMF_SLIDE;
 	}
 }
 
