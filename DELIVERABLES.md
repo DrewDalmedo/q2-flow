@@ -2,7 +2,6 @@
 
 ## BUGS
     - Crouching is buggy (has a slight delay)
-    - Dash length is inconsistent
 
 ## Common Deliverables:
 [ ] Shortcut that Auto-Launches your Mod
