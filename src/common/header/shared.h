@@ -622,6 +622,7 @@ typedef struct
 
   /* flow mod flags*/
   byte pm_advanced_movement;  /* double jump, dash, superjump, slide, stomp */
+  byte pm_disabled_movement;
 
 } pmove_state_t;
 

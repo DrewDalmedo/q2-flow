@@ -572,6 +572,7 @@ CL_ParsePlayerstate(frame_t *oldframe, frame_t *newframe)
 
 	if (flags & PS_M_ADVANCED_MOVEMENT) {
 		state->pmove.pm_advanced_movement = MSG_ReadByte(&net_message);
+    state->pmove.pm_disabled_movement = MSG_ReadByte(&net_message);
 	}
 
 	if (flags & PS_M_GRAVITY)
@@ -776,6 +777,7 @@ CL_ParseFrame(void)
 
 	if (cmd != svc_packetentities)
 	{
+    Com_DPrintf("cmd is %s\n", svc_strings[cmd]);
 		Com_Error(ERR_DROP, "CL_ParseFrame: 0x%X not packetentities", cmd);
 	}
 
