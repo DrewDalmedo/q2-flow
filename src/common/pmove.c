@@ -654,28 +654,46 @@ PM_AirMove(void)
     }
     
     // dash
-    if (pm->s.pm_advanced_movement & PMF_DASH) {
-      localDashTimer = Sys_Milliseconds();
+    //if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS && !(pm->s.pm_advanced_movement & ~PMF_DASH))) {
+    if (!(pm->s.pm_disabled_movement & PMF_DASH)) {
+      if (pm->s.pm_advanced_movement & PMF_DASH) {
+        localDashTimer = Sys_Milliseconds();
 
-      if (dashtimer <= 0) {
-        dashtimer = localDashTimer;
+        if (dashtimer <= 0) {
+          dashtimer = localDashTimer;
+        }
+        else if (localDashTimer - dashtimer >= DASH_DURATION) {
+          pm->s.pm_advanced_movement &= ~PMF_DASH;
+        }
+        
+        wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER * SPEED_BOOST;
+        continue;
       }
-      else if (localDashTimer - dashtimer >= DASH_DURATION) {
-        pm->s.pm_advanced_movement &= ~PMF_DASH;
+      else {
+        if (pm->s.pm_advanced_movement & PMF_DISABLEOTHERS) {
+        }
+        dashtimer = -999999;
       }
-      
-      wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER * SPEED_BOOST;
-      continue;
     }
     else {
+      // disabled timer logic here
       dashtimer = -999999;
+      pm->s.pm_advanced_movement &= ~PMF_DASH;
     }
 
     // slide
-    //if (pm->s.pm_flags & PMF_DUCKED) {
-    if (pm->s.pm_advanced_movement & PMF_SLIDE) {
-      wishvel[i] = (pml.slidingDirection[i] * fmove) * SPEED_BOOST;
-      continue;
+    //if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS && pm->s.pm_advanced_movement & ~PMF_SLIDE)) {
+    if (!(pm->s.pm_disabled_movement & PMF_SLIDE)) {
+      if (pm->s.pm_advanced_movement & PMF_SLIDE) {
+        pm_duckspeed = 500;
+        wishvel[i] = (pml.slidingDirection[i] * fmove) * SPEED_BOOST;
+        continue;
+      }
+    }
+    else {
+      // disabled timer logic here
+      pm_duckspeed = 100;
+      pm->s.pm_advanced_movement &= ~PMF_SLIDE;
     }
 
     wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * SPEED_BOOST;
@@ -880,12 +898,20 @@ PM_CheckJump(void)
   int currentTime = Sys_Milliseconds();
 
   // superjump
-  if (pm->s.pm_advanced_movement & PMF_SUPERJUMP && currentTime - superJumpTimer < SUPERJUMP_DURATION) {
-    if (pm->cmd.upmove == 200) {
-      pml.velocity[2] = SUPERJUMP_SPEED;
+  if (!(pm->s.pm_disabled_movement & PMF_SUPERJUMP)) {
+    if (pm->s.pm_advanced_movement & PMF_SUPERJUMP && currentTime - superJumpTimer < SUPERJUMP_DURATION) {
+      if (pm->cmd.upmove == 200) {
+        pml.velocity[2] = SUPERJUMP_SPEED;
+      }
+    }
+    else {
+      superJumpTimer = -999999;
+      if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS))
+        pm->s.pm_advanced_movement &= ~PMF_SUPERJUMP;
     }
   }
   else {
+    // disabled timer logic here
     superJumpTimer = -999999;
     pm->s.pm_advanced_movement &= ~PMF_SUPERJUMP;
   }
@@ -897,16 +923,23 @@ PM_CheckJump(void)
 		return;
 	}
 
-	if ((pm->cmd.upmove < 10) && (pm->cmd.upmove >= 0))
-	{
+	if ((pm->cmd.upmove < 10) && (pm->cmd.upmove >= 0)) {
 		/* not holding jump */
 		pm->s.pm_flags &= ~PMF_JUMP_HELD;
 		return;
 	}
-	else if (pm->cmd.upmove < 0 && pm->groundentity == NULL) {
-		pml.velocity[2] = -500;
-		return;
-	}
+
+  // stomp
+  if (!(pm->s.pm_disabled_movement & PMF_STOMP)) {
+    if (pm->cmd.upmove < 0 && pm->groundentity == NULL) {
+      pml.velocity[2] = -500;
+      return;
+    }
+  }
+  else {
+    // disabled timer logic here
+    if (pm->cmd.upmove < 0) return;
+  }
 
 	/* must wait for jump to be released */
 	if (pm->s.pm_flags & PMF_JUMP_HELD) 
@@ -915,10 +948,10 @@ PM_CheckJump(void)
 	}
 
 	/* if double jumped, cannot jump again */
-	if (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)
-	{
-		return;
-	}
+  if (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)
+  {
+    return;
+  }
 
 	if (pm->s.pm_type == PM_DEAD)
 	{
@@ -951,7 +984,7 @@ PM_CheckJump(void)
 		return;
 	}
 
-	if (pm->groundentity == NULL && (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP)) {
+	if (pm->groundentity == NULL && (pm->s.pm_advanced_movement & PMF_DOUBLEJUMP || pm->s.pm_disabled_movement & PMF_DOUBLEJUMP)) {
 		return;
 	}
 
@@ -1171,7 +1204,7 @@ PM_CheckDuck(void)
 		pm->s.pm_flags |= PMF_DUCKED;
   
     // slide
-    if (!(pm->s.pm_advanced_movement & PMF_SLIDE)) {
+    if (!(pm->s.pm_advanced_movement & PMF_SLIDE) && !(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS)) {
       pm->s.pm_advanced_movement |= PMF_SLIDE;
     }
     VectorCopy(pml.velocity, pml.slidingDirection);
@@ -1198,15 +1231,19 @@ PM_CheckDuck(void)
 		pm->viewheight = -2;
 
     // superjump
-    pm->s.pm_advanced_movement |= PMF_SUPERJUMP;
-    superJumpTimer = Sys_Milliseconds();
+    if (!(pm->s.pm_disabled_movement & PMF_SUPERJUMP)) {
+      pm->s.pm_advanced_movement |= PMF_SUPERJUMP;
+
+      superJumpTimer = Sys_Milliseconds();
+    }
 	}
 	else
 	{
 		pm->maxs[2] = 32;
 		pm->viewheight = 22;
 
-    pm->s.pm_advanced_movement &= ~PMF_SLIDE;
+    if (!(pm->s.pm_advanced_movement & PMF_DISABLEOTHERS && pm->s.pm_advanced_movement & PMF_SLIDE))
+      pm->s.pm_advanced_movement &= ~PMF_SLIDE;
 	}
 }
 
