@@ -37,13 +37,13 @@ void AL_Overwater();
 
 #define STEPSIZE 18
 
-// dash duration 
-#define DASH_DURATION 0.6 
+// dash duration (milliseconds)
+#define DASH_DURATION 300
 // how fast the dash is
-#define DASH_MULTIPLIER 2.25
+#define DASH_MULTIPLIER 3
 
-// slowed duration
-#define SLOW_DURATION 1.5
+// slowed duration (milliseconds)
+#define SLOW_DURATION 1500
 // how much the player is slowed down
 #define SLOW_MULTIPLIER 0.55
 
@@ -83,9 +83,9 @@ float pm_waterspeed = 400;
 /* flow movement parameters */
 float pm_dashspeed = 400;
 
-/* initialize at -1 to signal not in use */
-float dashtimer = -1.0f;
-float slowedtimer = -1.0f;
+/* initialize at -999999 to signal not in use */
+int dashtimer = -999999;
+int slowedtimer = -999999;
 
 #define STOP_EPSILON 0.1 /* Slide off of the impacting object returns the blocked flags (1 = floor, 2 = step / wall) */
 #define MIN_STEP_NORMAL 0.7 /* can't step up onto very steep slopes */
@@ -614,6 +614,9 @@ PM_AirMove(void)
 	float wishspeed;
 	float maxspeed;
 
+  int localSlowTimer;
+  int localDashTimer;
+
 	fmove = pm->cmd.forwardmove;
 	smove = pm->cmd.sidemove;
 
@@ -621,40 +624,43 @@ PM_AirMove(void)
 	{
     // slowed on taking damage
     if (pm->s.pm_advanced_movement & PMF_SLOWED) { 
+      localSlowTimer = Sys_Milliseconds();
+
       // if we're attempting to dash disable the flag (cannot dash while slowed)
       if (pm->s.pm_advanced_movement & PMF_DASH) {
         pm->s.pm_advanced_movement &= ~PMF_DASH;
       }
 
-      if (slowedtimer == -1.0f) {
-        slowedtimer = pml.frametime;
+      if (slowedtimer <= 0) {
+        slowedtimer = localSlowTimer;
       }
-      else if (slowedtimer >= SLOW_DURATION) {
+      else if (localSlowTimer - slowedtimer >= SLOW_DURATION) {
         pm->s.pm_advanced_movement &= ~PMF_SLOWED;
-        slowedtimer = -1.0f;
-      }
-      else {
-        slowedtimer += pml.frametime;
       }
 
       wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * SLOW_MULTIPLIER;
       continue;
     }
+    else {
+      slowedtimer = -999999;
+    }
+    
     // dash
-    else if (pm->s.pm_advanced_movement & PMF_DASH) {
-      if (dashtimer == -1.0f) {
-        dashtimer = pml.frametime;
+    if (pm->s.pm_advanced_movement & PMF_DASH) {
+      localDashTimer = Sys_Milliseconds();
+
+      if (dashtimer <= 0) {
+        dashtimer = localDashTimer;
       }
-      else if (dashtimer >= DASH_DURATION) {
+      else if (localDashTimer - dashtimer >= DASH_DURATION) {
         pm->s.pm_advanced_movement &= ~PMF_DASH;
-        dashtimer = -1.0f;
-      }
-      else {
-        dashtimer += pml.frametime;
       }
       
       wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER;
       continue;
+    }
+    else {
+      dashtimer = -999999;
     }
 
     wishvel[i] = pml.forward[i] * fmove + pml.right[i] * smove;
