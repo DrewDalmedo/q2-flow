@@ -37,19 +37,20 @@ void AL_Overwater();
 
 #define STEPSIZE 18
 
+#define SPEED_BOOST 1.30
+
 // dash duration (milliseconds)
-#define DASH_DURATION 300
+#define DASH_DURATION 200
 // how fast the dash is
-#define DASH_MULTIPLIER 2.50
+#define DASH_MULTIPLIER 2.60
 
 // slowed duration (milliseconds)
 #define SLOW_DURATION 1500
 // how much the player is slowed down
 #define SLOW_MULTIPLIER 0.55
 
-#define SLIDE_MULTIPLIER 1.50
-
 #define SUPERJUMP_DURATION 350
+#define SUPERJUMP_SPEED 380
 
 /* all of the locals will be zeroed before each
  * pmove, just to make damn sure we don't have
@@ -79,7 +80,7 @@ pml_t pml;
 /* movement parameters */
 float pm_stopspeed = 100;
 float pm_maxspeed = 800;
-float pm_duckspeed = 400;
+float pm_duckspeed = 500;
 float pm_accelerate = 10;
 float pm_airaccelerate = 0;
 float pm_wateraccelerate = 10;
@@ -663,7 +664,7 @@ PM_AirMove(void)
         pm->s.pm_advanced_movement &= ~PMF_DASH;
       }
       
-      wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER;
+      wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * DASH_MULTIPLIER * SPEED_BOOST;
       continue;
     }
     else {
@@ -671,12 +672,13 @@ PM_AirMove(void)
     }
 
     // slide
-    if (pm->s.pm_flags & PMF_DUCKED) {
-      wishvel[i] = (pml.slidingDirection[i] * fmove) * SLIDE_MULTIPLIER;
+    //if (pm->s.pm_flags & PMF_DUCKED) {
+    if (pm->s.pm_advanced_movement & PMF_SLIDE) {
+      wishvel[i] = (pml.slidingDirection[i] * fmove) * SPEED_BOOST;
       continue;
     }
 
-    wishvel[i] = pml.forward[i] * fmove + pml.right[i] * smove;
+    wishvel[i] = (pml.forward[i] * fmove + pml.right[i] * smove) * SPEED_BOOST;
 	}
 
 	wishvel[2] = 0;
@@ -880,7 +882,7 @@ PM_CheckJump(void)
   // superjump
   if (pm->s.pm_advanced_movement & PMF_SUPERJUMP && currentTime - superJumpTimer < SUPERJUMP_DURATION) {
     if (pm->cmd.upmove == 200) {
-      pml.velocity[2] = 400;
+      pml.velocity[2] = SUPERJUMP_SPEED;
     }
   }
   else {
