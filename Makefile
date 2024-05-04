@@ -1217,7 +1217,8 @@ run: all
 	./release/quake2 +set cheats 1 +developer 1 +modder 1
 
 modfolder: all
+	rm -rf ./release/flow
 	mkdir -p ./release/flow
-	cp -r ./modfiles/* ./config.cfg ./release/baseq2/* ./release/flow
+	cp -r ./modfiles/* ./config.cfg ./release/baseq2/game.so ./release/flow
 	# launch the mod with the shortcut (bash launch.sh)
 # ----------
