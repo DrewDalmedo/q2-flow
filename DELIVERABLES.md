@@ -38,5 +38,6 @@
     [x] Write final time, with checkpoint times underneath
     [x] Properly close file
 [ ] Add in checkpoints
-    ???
+    [ ] Create in-between checkpoints that display a message when triggered
+    [ ] Create map end checkpoint that ends the game on trigger
 
