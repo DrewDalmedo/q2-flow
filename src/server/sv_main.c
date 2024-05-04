@@ -25,6 +25,7 @@
  */
 
 #include "header/server.h"
+#include <stdio.h>
 
 #define HEARTBEAT_SECONDS 300
 
@@ -54,6 +55,26 @@ cvar_t *sv_downloadserver; /* Download server. */
 
 void Master_Shutdown(void);
 void SV_ConnectionlessPacket(void);
+void SV_RecordTotalTime(void);
+
+void
+SV_RecordTotalTime(void)
+{
+  char *gamedir = malloc(sizeof(char) * strlen(FS_Gamedir()) );
+  strcpy(gamedir, FS_Gamedir());
+  char *timeFileName = "/time.txt";
+
+  FILE *timeFile = fopen(strcat(gamedir, timeFileName), "a");
+
+  int totalTimeMilliseconds = svs.realtime;
+
+  int totalTimeMinutes = totalTimeMilliseconds / (1000 * 60);
+  int totalTimeSeconds = (totalTimeMilliseconds / 1000) % 60;
+
+  fprintf(timeFile, "Final time: %d:%02d\n", totalTimeMinutes, totalTimeSeconds);
+
+  fclose(timeFile);
+}
 
 /*
  * Called when the player is totally leaving the server, either willingly
@@ -673,6 +694,8 @@ SV_FinalMessage(char *message, qboolean reconnect)
 void
 SV_Shutdown(char *finalmsg, qboolean reconnect)
 {
+  SV_RecordTotalTime();
+
 	if (svs.clients)
 	{
 		SV_FinalMessage(finalmsg, reconnect);

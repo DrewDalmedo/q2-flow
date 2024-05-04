@@ -30,13 +30,13 @@
     [x] Modify weapon to disable superjump
     [x] Modify weapon to disable slide
     [x] Modify weapon to disable stomp
-[ ] Add in a timer and keep track of player history (file ops)
-    [ ] Start a timer on match join
+[x] Add in a timer and keep track of player history (file ops)
+    [x] Start a timer on match join
     [ ] **Maybe** keep track of when checkpoints are hit
-    [ ] Stop timer when race is finished 
-    [ ] Open file to write times to
-    [ ] Write final time, with checkpoint times underneath
-    [ ] Properly close file
+    [x] Stop timer when race is finished 
+    [x] Open file to write times to
+    [x] Write final time, with checkpoint times underneath
+    [x] Properly close file
 [ ] Add in checkpoints
     ???
 
