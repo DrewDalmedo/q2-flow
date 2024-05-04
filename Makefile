@@ -1213,7 +1213,11 @@ endif
 
 run: all
 	# assumes all game files are placed in the ./modfiles directory
-	cp ./modfiles/* ./release/baseq2
-	./release/quake2 +set deathmatch 1 +map base1 +set cheats 1 +developer 1 +modder 1
+	cp -r ./modfiles/* ./config.cfg ./release/baseq2
+	./release/quake2 +set cheats 1 +developer 1 +modder 1
 
+modfolder: all
+	mkdir -p ./release/flow
+	cp -r ./modfiles/* ./config.cfg ./release/baseq2/* ./release/flow
+	# launch the mod with the shortcut (bash launch.sh)
 # ----------
