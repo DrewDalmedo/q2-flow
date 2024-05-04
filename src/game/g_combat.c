@@ -660,8 +660,31 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 
     if (client) {
       client->ps.pmove.pm_advanced_movement |= PMF_SLOWED;
+
+      if (inflictor->item) {
+        if (inflictor->item->weapmodel) {
+          switch (attacker->item->weapmodel) {
+            case WEAP_BLASTER:
+              client->ps.pmove.pm_disabled_movement |= PMF_DASH;
+              break;
+            case WEAP_SHOTGUN:
+              client->ps.pmove.pm_disabled_movement |= PMF_DOUBLEJUMP;
+              break;
+            case WEAP_MACHINEGUN:
+              client->ps.pmove.pm_disabled_movement |= PMF_STOMP;
+              break;
+            case WEAP_HYPERBLASTER:
+              client->ps.pmove.pm_disabled_movement |= PMF_SLIDE;
+              break;
+            case WEAP_RAILGUN:
+              client->ps.pmove.pm_disabled_movement |= PMF_SUPERJUMP;
+              break;
+            default:
+              break;
+          }
+        }
+      }
     }
-		/* TODO: modify speed of entity */
 
 		if (targ->health <= 0)
 		{
