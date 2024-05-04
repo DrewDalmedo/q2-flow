@@ -24,12 +24,12 @@
 [x] Rework the weapons to be non-lethal / affect player movement
     [x] All weapons do no damage
     [x] All weapons slow down the player on impact
-[ ] Add in 5 power ups
-    [ ] Modify weapon to disable double jump
-    [ ] Modify weapon to disable dashing
-    [ ] Modify weapon to disable superjump
-    [ ] Modify weapon to disable slide
-    [ ] Modify weapon to disable stomp
+[x] Add in 5 power ups
+    [x] Modify weapon to disable double jump
+    [x] Modify weapon to disable dashing
+    [x] Modify weapon to disable superjump
+    [x] Modify weapon to disable slide
+    [x] Modify weapon to disable stomp
 [ ] Add in a timer and keep track of player history (file ops)
     [ ] Start a timer on match join
     [ ] **Maybe** keep track of when checkpoints are hit
