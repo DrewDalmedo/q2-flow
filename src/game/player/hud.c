@@ -367,22 +367,34 @@ HelpComputerMessage(edict_t *ent)
 	}
 
 	/* send the layout */
+	// Com_sprintf(string, sizeof(string),
+	// 		"xv 32 yv 8 picn help " /* background */
+	// 		"xv 202 yv 12 string2 \"%s\" " /* skill */
+	// 		"xv 0 yv 24 cstring2 \"%s\" " /* level name */
+	// 		"xv 0 yv 54 cstring2 \"%s\" " /* help 1 */
+	// 		"xv 0 yv 110 cstring2 \"%s\" " /* help 2 */
+	// 		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+	// 		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
+	// 		sk,
+	// 		level.level_name,
+	// 		game.helpmessage1,
+	// 		game.helpmessage2,
+	// 		level.killed_monsters, level.total_monsters,
+	// 		level.found_goals, level.total_goals,
+	// 		level.found_secrets, level.total_secrets);
 	Com_sprintf(string, sizeof(string),
 			"xv 32 yv 8 picn help " /* background */
-			"xv 202 yv 12 string2 \"%s\" " /* skill */
-			"xv 0 yv 24 cstring2 \"%s\" " /* level name */
-			"xv 0 yv 54 cstring2 \"%s\" " /* help 1 */
-			"xv 0 yv 110 cstring2 \"%s\" " /* help 2 */
-			"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-			"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
-			sk,
-			level.level_name,
-			game.helpmessage1,
-			game.helpmessage2,
-			level.killed_monsters, level.total_monsters,
-			level.found_goals, level.total_goals,
-			level.found_secrets, level.total_secrets);
-
+			"xv 32 yv 54 string2 \"%s\" " /* slide */
+			"xv 32 yv 62 string2 \"%s\" " /* crouch */
+			"xv 32 yv 70 string2 \"%s\" " /* superjump */
+			"xv 32 yv 78 string2 \"%s\" " /* doublejump */
+			"xv 32 yv 86 string2 \"%s\" ",/* stomp */ 
+      "Shift - Dash",
+      "Crouch while walking - slide",
+      "Jump after crouching - superjump",
+      "Jump in air - double jump",
+      "Crouch in air - Stomp"
+      );
 	gi.WriteByte(svc_layout);
 	gi.WriteString(string);
 }
