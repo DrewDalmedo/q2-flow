@@ -666,18 +666,23 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
           switch (attacker->item->weapmodel) {
             case WEAP_BLASTER:
               client->ps.pmove.pm_disabled_movement |= PMF_DASH;
+              gi.centerprintf(targ, "Dash Disabled!\n");
               break;
             case WEAP_SHOTGUN:
               client->ps.pmove.pm_disabled_movement |= PMF_DOUBLEJUMP;
+              gi.centerprintf(targ, "Double Jump Disabled!\n");
               break;
             case WEAP_MACHINEGUN:
               client->ps.pmove.pm_disabled_movement |= PMF_STOMP;
+              gi.centerprintf(targ, "Stomp Disabled!\n");
               break;
             case WEAP_HYPERBLASTER:
               client->ps.pmove.pm_disabled_movement |= PMF_SLIDE;
+              gi.centerprintf(targ, "Slide Disabled!\n");
               break;
             case WEAP_RAILGUN:
               client->ps.pmove.pm_disabled_movement |= PMF_SUPERJUMP;
+              gi.centerprintf(targ, "Superjump Disabled!\n");
               break;
             default:
               break;
