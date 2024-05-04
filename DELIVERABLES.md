@@ -4,15 +4,15 @@
     - Crouching is buggy (has a slight delay)
 
 ## Common Deliverables:
-[ ] Shortcut that Auto-Launches your Mod
-    [ ] Bash script
-[ ] Mod in a Separate Folder
-[ ] README file in GIT that explains HOWTO install and play / test your mod
+[x] Shortcut that Auto-Launches your Mod
+    [x] Bash script
+[x] Mod in a Separate Folder
+[x] README file in GIT that explains HOWTO install and play / test your mod
     [x] Dependencies
-    [ ] Explanation on using `make run`
-    [ ] Explanation on making mod folder
-[ ] UI updates reflecting your Personal Deliverables
-[ ] Help Screen to detail how to play your mod in game
+    [x] Explanation on using `make run`
+    [x] Explanation on making mod folder
+[x] UI updates reflecting your Personal Deliverables
+[x] Help Screen to detail how to play your mod in game
 
 ## Personal Deliverables
 [x] Add in 5 additional movement abilities
