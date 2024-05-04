@@ -751,6 +751,12 @@ SV_Gamemode_f(void)
 }
 
 void
+SV_GetRealtime_f(void)
+{
+  Com_DPrintf("Realtime: %d\n", svs.realtime);
+}
+
+void
 SV_InitOperatorCommands(void)
 {
 	Cmd_AddCommand("gamemode", SV_Gamemode_f);
