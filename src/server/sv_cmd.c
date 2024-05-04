@@ -786,6 +786,8 @@ SV_InitOperatorCommands(void)
 
 	Cmd_AddCommand("killserver", SV_KillServer_f);
 
+  Cmd_AddCommand("time", SV_GetRealtime_f);
+
 	Cmd_AddCommand("sv", SV_ServerCommand_f);
 }
 
