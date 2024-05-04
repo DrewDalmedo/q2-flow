@@ -1935,8 +1935,59 @@ Cmd_PrintAdvancedMovementFlags_f(edict_t *ent)
 
   cl = ent->client;
 
-  gi.dprintf("%d\n", cl->ps.pmove.pm_advanced_movement);
-  gi.dprintf("%d\n", cl->ps.pmove.pm_disabled_movement);
+  gi.dprintf("Advanced movement: %d\n", cl->ps.pmove.pm_advanced_movement);
+  gi.dprintf("Disabled movement: %d\n", cl->ps.pmove.pm_disabled_movement);
+}
+
+void
+Cmd_SimulateDamage_f(edict_t *ent)
+{
+  edict_t *mob;
+
+  if (!ent) return;
+
+  if (gi.argc() < 2 || gi.argc() > 2) {
+    gi.cprintf(ent, PRINT_HIGH, \
+        "Usage: simdamage <blaster|hyperblaster|shotgun|machinegun|railgun>\n" \
+    );
+    return;
+  }
+
+  char *damageTypeRequest = gi.argv(1);
+  gi.dprintf("%s\n", damageTypeRequest);
+
+  /* create a dummy monster */
+  mob = G_Spawn();
+  if (!mob) return;
+
+  mob->inuse = true;
+  mob->classname = "monster_soldier";
+  mob->s.origin[0] = 0;
+  mob->s.origin[1] = 0;
+  mob->s.origin[2] = 0;
+
+  ED_CallSpawn(mob);
+
+  if (Q_stricmp(damageTypeRequest, "blaster") == 0) 
+    mob->item = GetItemByIndex(7); 
+  else if (Q_stricmp(damageTypeRequest, "shotgun") == 0) 
+    mob->item = GetItemByIndex(8); 
+  else if (Q_stricmp(damageTypeRequest, "machinegun") == 0) 
+    mob->item = GetItemByIndex(10); 
+  else if (Q_stricmp(damageTypeRequest, "hyperblaster") == 0) 
+    mob->item = GetItemByIndex(15); 
+  else if (Q_stricmp(damageTypeRequest, "railgun") == 0) 
+    mob->item = GetItemByIndex(16); 
+  else {
+    gi.cprintf(ent, PRINT_HIGH, "Invalid item name: %s\n", damageTypeRequest);
+    return;
+  }
+
+  if (!(mob->item)) return;
+
+  T_Damage(ent, mob, mob, 0, ent->s.origin, ent->s.origin, 1, 0, DAMAGE_ENERGY, 1);
+
+  G_FreeEdict(mob);
 }
 
 void
@@ -2002,6 +2053,12 @@ ClientCommand(edict_t *ent)
   if (Q_stricmp(cmd, "disableall") == 0)
   {
     Cmd_DisableAllMovement_f(ent);
+    return;
+  }
+
+  if (Q_stricmp(cmd, "simdamage") == 0)
+  {
+    Cmd_SimulateDamage_f(ent);
     return;
   }
 
