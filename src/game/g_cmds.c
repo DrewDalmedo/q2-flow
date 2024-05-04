@@ -1985,7 +1985,7 @@ Cmd_SimulateDamage_f(edict_t *ent)
 
   if (!(mob->item)) return;
 
-  T_Damage(ent, mob, mob, 0, ent->s.origin, ent->s.origin, 1, 0, DAMAGE_ENERGY, 1);
+  T_Damage(ent, mob, mob, 0, ent->s.origin, ent->s.origin, 255, 0, DAMAGE_ENERGY, 1);
 
   G_FreeEdict(mob);
 }
@@ -2067,7 +2067,6 @@ ClientCommand(edict_t *ent)
     Cmd_EnableAllMovement_f(ent);
     return;
   }
-
 
   /* end flow */
 
