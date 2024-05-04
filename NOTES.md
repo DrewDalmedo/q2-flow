@@ -28,5 +28,10 @@ These are the collection of notes I've gathered while trying to mod Quake 2.
 - Type of edict_s
     - edict_s defined in game.h
 
+## Timers
+- Look in g_main.c
+    - EndDMLevel() & CheckDMRules()
+- sv_init.c
+
 ## Checkpoints
 - `src/game/g_trigger.c`
