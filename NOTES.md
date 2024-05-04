@@ -32,6 +32,8 @@ These are the collection of notes I've gathered while trying to mod Quake 2.
 - Look in g_main.c
     - EndDMLevel() & CheckDMRules()
 - sv_init.c
+(server_static_t).realtime
+- File goes to ~/.yq2/baseq2/time.txt
 
 ## Checkpoints
 - `src/game/g_trigger.c`
